@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Game kiểm tra tốc độ</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+        #game {
+            width: 600px;
+            height: 400px;
+            background-color: lightblue;
+            border: 2px solid blue;
+            margin: auto;
+            position: relative;
+        }
+        #nut {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            border: none;
+            position: absolute;
+            cursor: pointer;
+        }
+        button {
+            padding: 8px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Game kiểm tra tốc độ</h2>
+    <p>Điểm: <span id="diem">0</span></p>
+    <p>Thời gian còn lại:
+        <span id="thoigiancon">30</span> giây
+    </p>
+    <label>Chọn thời gian chơi:</label>
+    <input type="number" id="thoigian" value="30" min="1">
+    <br>
+    <button onclick="batDau()">Bắt đầu chơi</button>
+    <button onclick="doiMau()">Đổi màu nền trò chơi ngẫu nhiên</button>
+    <button onclick="nguoiChoi()">Người chơi</button>
+    <p id="thongbao"></p>
+    <div id="game">
+        <button id="nut" onclick="tangDiem()"></button>
+    </div>
+    <script>
+        var diem = 0;
+        var thoigian = 30;
+        var dangChoi = false;
+        var dongHo;
+        function batDau() {
+            clearInterval(dongHo);
+            thoigian = Number(document.getElementById("thoigian").value);
+            if (thoigian < 1 || isNaN(thoigian)) {
+                alert("Vui lòng nhập thời gian hợp lệ!");
+                return;
+            }
+            diem = 0;
+            dangChoi = true;
+            document.getElementById("diem").innerHTML = diem;
+            document.getElementById("thoigiancon").innerHTML = thoigian;
+            document.getElementById("thongbao").innerHTML = "";
+            document.getElementById("nut").style.display = "block";
+            document.getElementById("thoigian").disabled = true;
+            diChuyen();
+            dongHo = setInterval(function() {
+                thoigian--;
+                document.getElementById("thoigiancon").innerHTML = thoigian;
+                if (thoigian <= 0) {
+                    clearInterval(dongHo);
+                    dangChoi = false;
+                    document.getElementById("nut").style.display = "none";
+                    document.getElementById("thoigian").disabled = false;
+                    document.getElementById("thongbao").innerHTML =
+                        "Hết giờ! Tổng điểm của bạn là: " + diem;
+                }
+            }, 1000);
+        }
+        function tangDiem() {
+            if (dangChoi) {
+                diem++;
+                document.getElementById("diem").innerHTML = diem;
+                diChuyen();
+            }
+        }
+        function diChuyen() {
+            var nut = document.getElementById("nut");
+            var game = document.getElementById("game");
+            var x = Math.random() * (game.clientWidth - 30);
+            var y = Math.random() * (game.clientHeight - 30);
+            nut.style.left = x + "px";
+            nut.style.top = y + "px";
+        }
+        function doiMau() {
+            var mau = "#" + Math.floor(Math.random() * 16777215)
+                .toString(16).padStart(6, "0");
+            document.getElementById("game").style.backgroundColor = mau;
+        }
+        function nguoiChoi() {
+            document.getElementById("thongbao").innerHTML =
+                "Mã sinh viên: 231A010598";
+        }
+    </script>
+</body>
+</html>
